@@ -7,9 +7,8 @@ namespace KooliProjekt.Data
         [Key]
         public Guid TournamentId { get; set; } = Guid.NewGuid();
         
-        [Required]
-        [MinLength(3)]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "Tournament name is required.")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "Tournament name must be between 5 and 40 characters.")]
         public string TournamentName { get; set; }
         
         [DataType(DataType.Date)]
@@ -31,8 +30,13 @@ namespace KooliProjekt.Data
 
     public enum TournamentStatus
     {
+        [Display(Name = "Not started")]
         NotStarted,
+
+        [Display(Name = "Ongoing")]
         Ongoing,
+
+        [Display(Name = "Finished")]
         Finished
     }
 }
