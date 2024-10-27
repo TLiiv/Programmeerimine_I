@@ -13,7 +13,7 @@ namespace KooliProjekt.Data
         [ForeignKey("Tournament")]
         public Guid TournamentId {  get; set; }
         public Tournament Tournament { get; set; }
-        public int PredictedPoints { get; set; }
-        public int Rank {  get; set; }
+        public int PredictedPoints { get; set; } = 0;
+        public int Rank { get; set; } = 0;
     }
 }
