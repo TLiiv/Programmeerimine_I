@@ -24,10 +24,8 @@ namespace KooliProjekt.Data
 
         public int PredictedHomeGoals { get; set; }
         public int PredictedAwayGoals { get; set; }
-        public int Score { get; set; }
         public double AccountBalance { get; set; }
         public double BetAmount { get; set; }
-
         
     }
 }
