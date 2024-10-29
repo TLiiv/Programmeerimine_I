@@ -32,8 +32,8 @@ namespace KooliProjekt.Data
         //ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.")]
         
         public string Password { get; set; }
-        public string PhoneNumber { get; set; }
-        public ICollection<UserBets> UserBets { get; set; } = new List<UserBets>();
+        public string? PhoneNumber { get; set; }
+        public IList<UserBets> UserBets { get; set; } = new List<UserBets>();
         public bool IsAdmin { get; set; }
     }
 }

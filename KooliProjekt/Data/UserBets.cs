@@ -5,6 +5,7 @@ namespace KooliProjekt.Data
 {
     public class UserBets
     {
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
@@ -38,6 +39,7 @@ namespace KooliProjekt.Data
         
         [Range(0, double.MaxValue)]
         public double BetAmount { get; set; }
-        
+        public DateTime BetPlacedDate { get; set; } = DateTime.UtcNow;
+
     }
 }

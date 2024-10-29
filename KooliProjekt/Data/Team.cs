@@ -18,8 +18,8 @@ namespace KooliProjekt.Data
         public int GamesLost { get; set; } = 0;
         public int GamesPlayed { get; set; } = 0;
         
-        [ForeignKey("Tournament")]
-        public Guid TornamentId { get; set; }
-        public Tournament? Tournament { get; set; }
+        //[ForeignKey("Tournament")]
+        //public Guid TornamentId { get; set; }
+        //public Tournament? Tournament { get; set; }
     }
 }

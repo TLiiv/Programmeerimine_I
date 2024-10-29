@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace KooliProjekt.Data
 {
     public class Game
     {
+        [Key]
         public Guid GamesId { get; set; } = Guid.NewGuid();
 
         [Required]
@@ -25,8 +26,8 @@ namespace KooliProjekt.Data
         [ForeignKey("Team")]
         public Guid? AwayTeamId { get; set; }
         public Team? AwayTeam { get; set; }
-       
-        public ICollection<UserBets> UserBets { get; set; } = new List<UserBets>();
+
+        public IList<UserBets> UserBets { get; set; } = new List<UserBets>();
         public bool AreTeamsConfirmed { get; set; }
 
         [Required]
