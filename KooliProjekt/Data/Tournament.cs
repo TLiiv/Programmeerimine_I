@@ -6,15 +6,15 @@ namespace KooliProjekt.Data
     {
         [Key]
         public Guid TournamentId { get; set; } = Guid.NewGuid();
-        
+
         [Required(ErrorMessage = "Tournament name is required.")]
         [StringLength(40, MinimumLength = 4, ErrorMessage = "Tournament name must be between 5 and 40 characters.")]
         public string TournamentName { get; set; }
-        
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TournamentStartDate { get; set; }
-        
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TournamentEndtDate { get; set; }

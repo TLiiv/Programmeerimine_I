@@ -9,34 +9,34 @@ namespace KooliProjekt.Data
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        [ForeignKey("User")]
+        [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
         public User? User { get; set; }
-        
+
         [Required]
-        [ForeignKey("Tournament")]
+        [ForeignKey(nameof(Tournament))]
         public Guid TournamentId { get; set; }
         public Tournament? Tournament { get; set; }
 
         [Required]
-        [ForeignKey("Game")]
+        [ForeignKey(nameof(Game))]
         public Guid GameId { get; set; }
         public Game? Game { get; set; }
 
         [Required]
-        [ForeignKey("Team")]
+        [ForeignKey(nameof(PredictedWinningTeam))]
         public Guid PredictedWinningTeamId { get; set; }
         public Team? PredictedWinningTeam { get; set; }
 
         [Range(0, int.MaxValue)]
         public int PredictedHomeGoals { get; set; }
-        
+
         [Range(0, int.MaxValue)]
         public int PredictedAwayGoals { get; set; }
-        
+
         [Range(0, double.MaxValue)]
         public double AccountBalance { get; set; }
-        
+
         [Range(0, double.MaxValue)]
         public double BetAmount { get; set; }
         public DateTime BetPlacedDate { get; set; } = DateTime.UtcNow;

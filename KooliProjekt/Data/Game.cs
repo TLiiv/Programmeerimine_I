@@ -19,11 +19,14 @@ namespace KooliProjekt.Data
         public DateTime GameStartTime { get; set; }
 
         [Required]
-        [ForeignKey("Team")]
+        //[ForeignKey(nameof(Team))]
+        [ForeignKey(nameof(HomeTeamId))]
         public Guid? HomeTeamId { get; set; }
         public Team? HomeTeam { get; set; }
 
-        [ForeignKey("Team")]
+        [Required]
+        //[ForeignKey(nameof(Team))]
+        [ForeignKey(nameof(AwayTeamId))]
         public Guid? AwayTeamId { get; set; }
         public Team? AwayTeam { get; set; }
 
@@ -31,7 +34,7 @@ namespace KooliProjekt.Data
         public bool AreTeamsConfirmed { get; set; }
 
         [Required]
-        [ForeignKey("Tournament")]
+        [ForeignKey(nameof(Tournament))]
         public Guid TournamentId { get; set; }
         public Tournament Tournament { get; set; }
     }

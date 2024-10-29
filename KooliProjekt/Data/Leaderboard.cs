@@ -7,12 +7,16 @@ namespace KooliProjekt.Data
     {
         [Key]
         public Guid LeaderBoardId { get; set; } = Guid.NewGuid();
-        [ForeignKey("User")]
+
+        [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
-        public ICollection<User> Users { get; set; }
-        [ForeignKey("Tournament")]
-        public Guid TournamentId {  get; set; }
+        public User? User { get; set; }
+        public ICollection<User> LeaderboardUsers { get; set; }
+
+        [ForeignKey(nameof(Tournament))]
+        public Guid TournamentId { get; set; }
         public Tournament Tournament { get; set; }
+
         public int PredictedPoints { get; set; } = 0;
         public int Rank { get; set; } = 0;
     }
