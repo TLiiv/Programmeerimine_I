@@ -15,5 +15,22 @@ namespace KooliProjekt.Data
         public DbSet<Leaderboard> Leaderboards { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserBets> UsersBets { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.HomeTeam)
+                .WithMany()
+                .HasForeignKey(g => g.HomeTeamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.AwayTeam)
+                .WithMany()
+                .HasForeignKey(g => g.AwayTeamId)
+                .OnDelete(DeleteBehavior.Restrict); 
+        }
     }
+
 }

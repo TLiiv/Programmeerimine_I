@@ -1,0 +1,65 @@
+﻿@model IEnumerable<KooliProjekt.Data.Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameStartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomeTeam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AwayTeam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AreTeamsConfirmed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tournament)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameStartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameStartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeTeam.TeamName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AwayTeam.TeamName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreTeamsConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tournament.TournamentName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GamesId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GamesId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GamesId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
