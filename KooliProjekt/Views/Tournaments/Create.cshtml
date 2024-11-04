@@ -28,9 +28,17 @@
                 <span asp-validation-for="TournamentEndtDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*  <label asp-for="Status" class="control-label"></label>
+                 <select asp-for="Status" class="form-control"></select>
+                 <span asp-validation-for="Status" class="text-danger"></span> *@
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<KooliProjekt.Data.TournamentStatus>()"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Format" class="control-label"></label>
+                <select asp-for="Format" class="form-control" asp-items="Html.GetEnumSelectList<KooliProjekt.Data.TournamentFormat>()"></select>
+                <span asp-validation-for="Format" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

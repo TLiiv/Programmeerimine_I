@@ -25,8 +25,22 @@ namespace KooliProjekt.Data
 
 
         public TournamentStatus Status { get; set; }
+        [Required]
+        public TournamentFormat Format { get; set; }
+        public int GetMaxGames()
+        {
+            return Format switch
+            {
+                TournamentFormat.EightTeams => 7,
+                TournamentFormat.SixteenTeams => 15,
+                TournamentFormat.ThirtyTwoTeams => 31,
+                _ => 0
+            };
+        }
 
     }
+
+
 
     public enum TournamentStatus
     {
@@ -39,4 +53,14 @@ namespace KooliProjekt.Data
         [Display(Name = "Finished")]
         Finished
     }
+    public enum TournamentFormat
+    {
+        [Display(Name = "8 Teams")]
+        EightTeams = 8, // 7 games
+        [Display(Name = "16 Teams")]
+        SixteenTeams = 16, // 15 games
+        [Display(Name = "32 Teams")]
+        ThirtyTwoTeams = 32 // 31 games
+    }
+
 }
