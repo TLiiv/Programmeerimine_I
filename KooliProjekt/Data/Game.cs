@@ -36,6 +36,6 @@ namespace KooliProjekt.Data
         [Required]
         [ForeignKey(nameof(Tournament))]
         public Guid TournamentId { get; set; }
-        public Tournament Tournament { get; set; }
+        public Tournament? Tournament { get; set; }
     }
 }
