@@ -66,6 +66,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
+                userBets.BetPlacedDate = DateTime.UtcNow;
                 userBets.Id = Guid.NewGuid();
                 _context.Add(userBets);
                 await _context.SaveChangesAsync();
