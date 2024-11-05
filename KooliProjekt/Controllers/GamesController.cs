@@ -52,6 +52,7 @@ namespace KooliProjekt.Controllers
             ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName");
             ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName");
             ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName");
+            
             return View();
         }
 
@@ -62,17 +63,48 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GamesId,GameStartDate,GameStartTime,HomeTeamId,AwayTeamId,AreTeamsConfirmed,TournamentId")] Game game)
         {
+            //if (ModelState.IsValid)
+            //{
+            //    game.GamesId = Guid.NewGuid();
+            //    _context.Add(game);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            //ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
+            //ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
+            //ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
+            //return View(game);
+            Console.WriteLine($"Received TournamentId: {game.TournamentId}");
+
             if (ModelState.IsValid)
             {
-                game.GamesId = Guid.NewGuid();
-                _context.Add(game);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                  
+                    game.GamesId = Guid.NewGuid();                 
+                    _context.Add(game);               
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("Database updated successfully.");
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {                 
+                    Console.WriteLine($"Error saving game: {ex.Message}");
+                    return View(game);
+                }
             }
-            ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
-            ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
-            return View(game);
+            else
+            {
+                Console.WriteLine("ModelState is not valid");
+
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Validation Error: {error.ErrorMessage}");
+                }
+                return View(game);
+            }
         }
 
         // GET: Games/Edit/5

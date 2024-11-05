@@ -53,7 +53,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status")] Tournament tournament)
+        public async Task<IActionResult> Create([Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status,Format")] Tournament tournament)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status")] Tournament tournament)
+        public async Task<IActionResult> Edit(Guid id, [Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status,Format")] Tournament tournament)
         {
             if (id != tournament.TournamentId)
             {
