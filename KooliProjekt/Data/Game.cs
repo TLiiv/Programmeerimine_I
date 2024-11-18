@@ -18,16 +18,14 @@ namespace KooliProjekt.Data
         [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime GameStartTime { get; set; }
 
-        [Required]
-        //[ForeignKey(nameof(Team))]
+        
         [ForeignKey(nameof(HomeTeamId))]
-        public Guid? HomeTeamId { get; set; }
+        public Guid? HomeTeamId { get; set; } 
         public Team? HomeTeam { get; set; }
 
-        [Required]
-        //[ForeignKey(nameof(Team))]
+        
         [ForeignKey(nameof(AwayTeamId))]
-        public Guid? AwayTeamId { get; set; }
+        public Guid? AwayTeamId { get; set; } 
         public Team? AwayTeam { get; set; }
 
         public IList<UserBets> UserBets { get; set; } = new List<UserBets>();
