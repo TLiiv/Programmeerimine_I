@@ -29,7 +29,13 @@ namespace KooliProjekt.Data
                 .HasOne(g => g.AwayTeam)
                 .WithMany()
                 .HasForeignKey(g => g.AwayTeamId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Entity<UserBets>()
+            //.HasOne(bet => bet.User)
+            //.WithMany(user => user.UserBets)
+            //.HasForeignKey(bet => bet.UserId)
+            //.OnDelete(DeleteBehavior.Cascade);
         }
     }
 

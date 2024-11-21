@@ -12,19 +12,20 @@ namespace KooliProjekt.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        
         private readonly IUsersService _usersService;
 
-        public UsersController(ApplicationDbContext context, IUsersService usersService)
+        public UsersController(IUsersService usersService)
         {
-            _context = context;
+            
             _usersService = usersService;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var data  = await _usersService.AllUsers();
+            return View(data);
         }
 
         // GET: Users/Details/5
@@ -35,8 +36,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _usersService.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -60,9 +60,8 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.UserId = Guid.NewGuid();
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                //user.UserId = Guid.NewGuid();
+                await _usersService.Save(user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -76,7 +75,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _usersService.Get(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -98,23 +97,7 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _usersService.Save(user);
             }
             return View(user);
         }
@@ -127,8 +110,8 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _usersService.Get(id.Value);
+                
             if (user == null)
             {
                 return NotFound();
@@ -142,19 +125,10 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
-
-            await _context.SaveChangesAsync();
+            await _usersService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(Guid id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
-        }
+     
     }
 }
