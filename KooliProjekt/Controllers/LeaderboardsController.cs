@@ -6,23 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class LeaderboardsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+      
+        private readonly ILeaderboardsService _leaderboardsService;
 
-        public LeaderboardsController(ApplicationDbContext context)
+        public LeaderboardsController(ILeaderboardsService leaderboardsService)
         {
-            _context = context;
+            _leaderboardsService = leaderboardsService;
         }
 
         // GET: Leaderboards
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Leaderboards.Include(l => l.Tournament).Include(l => l.User);
-            return View(await applicationDbContext.ToListAsync());
+            var data =await _leaderboardsService.AllLeaderboards();
+            return View(data);
         }
 
         // GET: Leaderboards/Details/5
@@ -33,10 +35,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var leaderboard = await _context.Leaderboards
-                .Include(l => l.Tournament)
-                .Include(l => l.User)
-                .FirstOrDefaultAsync(m => m.LeaderBoardId == id);
+            var leaderboard = await _leaderboardsService.Get(id.Value);
             if (leaderboard == null)
             {
                 return NotFound();
@@ -46,10 +45,12 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Leaderboards/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
+            var dropdownData = await _leaderboardsService.GetDropdownData();
+
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName");
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email");
             return View();
         }
 
@@ -62,13 +63,13 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                leaderboard.LeaderBoardId = Guid.NewGuid();
-                _context.Add(leaderboard);
-                await _context.SaveChangesAsync();
+                await _leaderboardsService.Save(leaderboard);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", leaderboard.UserId);
+            var dropdownData = await _leaderboardsService.GetDropdownData();
+
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", leaderboard.UserId);
             return View(leaderboard);
         }
 
@@ -80,13 +81,16 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var leaderboard = await _context.Leaderboards.FindAsync(id);
+            var leaderboard = await _leaderboardsService.Get(id.Value);
             if (leaderboard == null)
             {
                 return NotFound();
             }
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", leaderboard.UserId);
+
+            var dropdownData = await _leaderboardsService.GetDropdownData();
+
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", leaderboard.UserId);
             return View(leaderboard);
         }
 
@@ -104,26 +108,14 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(leaderboard);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LeaderboardExists(leaderboard.LeaderBoardId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _leaderboardsService.Save(leaderboard);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", leaderboard.UserId);
+            var dropdownData = await _leaderboardsService.GetDropdownData();
+
+
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", leaderboard.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", leaderboard.UserId);
             return View(leaderboard);
         }
 
@@ -135,10 +127,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var leaderboard = await _context.Leaderboards
-                .Include(l => l.Tournament)
-                .Include(l => l.User)
-                .FirstOrDefaultAsync(m => m.LeaderBoardId == id);
+            var leaderboard = await _leaderboardsService.Get(id.Value);
             if (leaderboard == null)
             {
                 return NotFound();
@@ -152,19 +141,9 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var leaderboard = await _context.Leaderboards.FindAsync(id);
-            if (leaderboard != null)
-            {
-                _context.Leaderboards.Remove(leaderboard);
-            }
-
-            await _context.SaveChangesAsync();
+            await _leaderboardsService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LeaderboardExists(Guid id)
-        {
-            return _context.Leaderboards.Any(e => e.LeaderBoardId == id);
-        }
     }
 }

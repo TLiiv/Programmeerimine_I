@@ -49,12 +49,12 @@ namespace KooliProjekt.Controllers
         // GET: UserBets/Create
         public async Task<IActionResult> Create()
         {
-            var dropDownData = await _userBetsService.GetDropdownData();
+            var dropdownData = await _userBetsService.GetDropdownData();
            
-            ViewData["GameId"] = new SelectList(dropDownData.Games, "GamesId", "GamesId");
-            ViewData["PredictedWinningTeamId"] = new SelectList(dropDownData.Teams, "TeamId", "TeamName");
-            ViewData["TournamentId"] = new SelectList(dropDownData.Tournaments, "TournamentId", "TournamentName");
-            ViewData["UserId"] = new SelectList(dropDownData.Users, "UserId", "Email");
+            ViewData["GameId"] = new SelectList(dropdownData.Games, "GamesId", "GamesId");
+            ViewData["PredictedWinningTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName");
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName");
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email");
 
             return View();
         }
@@ -73,12 +73,12 @@ namespace KooliProjekt.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var dropDownData = await _userBetsService.GetDropdownData();
+            var dropdownData = await _userBetsService.GetDropdownData();
 
-            ViewData["GameId"] = new SelectList(dropDownData.Games, "GamesId", "GamesId", userBets.GameId);
-            ViewData["PredictedWinningTeamId"] = new SelectList(dropDownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
-            ViewData["TournamentId"] = new SelectList(dropDownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
-            ViewData["UserId"] = new SelectList(dropDownData.Users, "UserId", "Email", userBets.UserId);
+            ViewData["GameId"] = new SelectList(dropdownData.Games, "GamesId", "GamesId", userBets.GameId);
+            ViewData["PredictedWinningTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", userBets.UserId);
             return View(userBets);
         }
 
@@ -97,11 +97,11 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var dropDownData = await _userBetsService.GetDropdownData();
-            ViewData["GameId"] = new SelectList(dropDownData.Games, "GamesId", "GamesId", userBets.GameId);
-            ViewData["PredictedWinningTeamId"] = new SelectList(dropDownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
-            ViewData["TournamentId"] = new SelectList(dropDownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
-            ViewData["UserId"] = new SelectList(dropDownData.Users, "UserId", "Email", userBets.UserId);
+            var dropdownData = await _userBetsService.GetDropdownData();
+            ViewData["GameId"] = new SelectList(dropdownData.Games, "GamesId", "GamesId", userBets.GameId);
+            ViewData["PredictedWinningTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", userBets.UserId);
             return View(userBets);
         }
 
@@ -122,11 +122,11 @@ namespace KooliProjekt.Controllers
                await _userBetsService.Save(userBets);
             }
 
-            var dropDownData = await _userBetsService.GetDropdownData();
-            ViewData["GameId"] = new SelectList(dropDownData.Games, "GamesId", "GamesId", userBets.GameId);
-            ViewData["PredictedWinningTeamId"] = new SelectList(dropDownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
-            ViewData["TournamentId"] = new SelectList(dropDownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
-            ViewData["UserId"] = new SelectList(dropDownData.Users, "UserId", "Email", userBets.UserId);
+            var dropdownData = await _userBetsService.GetDropdownData();
+            ViewData["GameId"] = new SelectList(dropdownData.Games, "GamesId", "GamesId", userBets.GameId);
+            ViewData["PredictedWinningTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
+            ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", userBets.UserId);
             return View(userBets);
         }
 
