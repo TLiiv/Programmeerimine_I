@@ -60,7 +60,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                //user.UserId = Guid.NewGuid();
+                
                 await _usersService.Save(user);
                 return RedirectToAction(nameof(Index));
             }

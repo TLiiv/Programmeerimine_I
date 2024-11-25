@@ -23,6 +23,8 @@ namespace KooliProjekt
 
             builder.Services.AddScoped<IUsersService, UsersService>();
 
+            builder.Services.AddScoped<IUserBetsService, UserBetsService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

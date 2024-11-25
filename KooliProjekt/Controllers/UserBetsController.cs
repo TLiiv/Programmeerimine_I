@@ -6,23 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class UserBetsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUserBetsService _userBetsService;
 
-        public UserBetsController(ApplicationDbContext context)
+        public UserBetsController(ApplicationDbContext context,IUserBetsService userBetsService)
         {
             _context = context;
+            _userBetsService = userBetsService;
         }
 
         // GET: UserBets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.UsersBets.Include(u => u.Game).Include(u => u.PredictedWinningTeam).Include(u => u.Tournament).Include(u => u.User);
-            return View(await applicationDbContext.ToListAsync());
+            var data = await _userBetsService.AllUserBets();
+            return View(data);
         }
 
         // GET: UserBets/Details/5
@@ -33,12 +36,8 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var userBets = await _context.UsersBets
-                .Include(u => u.Game)
-                .Include(u => u.PredictedWinningTeam)
-                .Include(u => u.Tournament)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userBets = _userBetsService.Get(id.Value);
+              
             if (userBets == null)
             {
                 return NotFound();
@@ -66,10 +65,10 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                userBets.BetPlacedDate = DateTime.UtcNow;
-                userBets.Id = Guid.NewGuid();
-                _context.Add(userBets);
-                await _context.SaveChangesAsync();
+                //userBets.BetPlacedDate = DateTime.UtcNow;
+                //userBets.Id = Guid.NewGuid();
+                //_context.Add(userBets);
+                await _userBetsService.Save(userBets);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameId"] = new SelectList(_context.Games, "GamesId", "GamesId", userBets.GameId);
@@ -87,7 +86,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var userBets = await _context.UsersBets.FindAsync(id);
+            var userBets = await _userBetsService.Get(id.Value);
             if (userBets == null)
             {
                 return NotFound();
@@ -113,23 +112,7 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userBets);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserBetsExists(userBets.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+               await _userBetsService.Save(userBets);
             }
             ViewData["GameId"] = new SelectList(_context.Games, "GamesId", "GamesId", userBets.GameId);
             ViewData["PredictedWinningTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
@@ -146,12 +129,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var userBets = await _context.UsersBets
-                .Include(u => u.Game)
-                .Include(u => u.PredictedWinningTeam)
-                .Include(u => u.Tournament)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userBets = await _userBetsService.Get(id.Value);
             if (userBets == null)
             {
                 return NotFound();
@@ -165,19 +143,11 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var userBets = await _context.UsersBets.FindAsync(id);
-            if (userBets != null)
-            {
-                _context.UsersBets.Remove(userBets);
-            }
 
-            await _context.SaveChangesAsync();
+
+            await _userBetsService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserBetsExists(Guid id)
-        {
-            return _context.UsersBets.Any(e => e.Id == id);
-        }
     }
 }
