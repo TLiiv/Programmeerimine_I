@@ -6,23 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class GamesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        
+        private readonly IGamesService _gamesService;
 
-        public GamesController(ApplicationDbContext context)
+        public GamesController(IGamesService gamesService)
         {
-            _context = context;
+           
+            _gamesService = gamesService;
         }
 
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Games.Include(g => g.AwayTeam).Include(g => g.HomeTeam).Include(g => g.Tournament);
-            return View(await applicationDbContext.ToListAsync());
+            var data = await _gamesService.AllGames();
+            return View(data);
         }
 
         // GET: Games/Details/5
@@ -33,11 +36,8 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .Include(g => g.AwayTeam)
-                .Include(g => g.HomeTeam)
-                .Include(g => g.Tournament)
-                .FirstOrDefaultAsync(m => m.GamesId == id);
+            var game = await _gamesService.Get(id.Value);
+              
             if (game == null)
             {
                 return NotFound();
@@ -47,11 +47,13 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Games/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName");
-            ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName");
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName");
+            var dropdownData = await _gamesService.GetDropdownData();
+
+            ViewData["AwayTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName");
+            ViewData["HomeTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName");
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName");
             
             return View();
         }
@@ -63,48 +65,49 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GamesId,GameStartDate,GameStartTime,HomeTeamId,AwayTeamId,AreTeamsConfirmed,TournamentId")] Game game)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    game.GamesId = Guid.NewGuid();
-            //    _context.Add(game);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            //ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
-            //ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
-            //ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
-            //return View(game);
-            Console.WriteLine($"Received TournamentId: {game.TournamentId}");
-
             if (ModelState.IsValid)
             {
-                try
-                {
+               await _gamesService.Save(game);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var dropdownData = await _gamesService.GetDropdownData();
+
+            ViewData["AwayTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.AwayTeamId);
+            ViewData["HomeTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.HomeTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
+            return View(game);
+            //Console.WriteLine($"Received TournamentId: {game.TournamentId}");
+
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
                   
-                    game.GamesId = Guid.NewGuid();                 
-                    _context.Add(game);               
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine("Database updated successfully.");
+            //    await _gamesService.Save(game);
 
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {                 
-                    Console.WriteLine($"Error saving game: {ex.Message}");
-                    return View(game);
-                }
-            }
-            else
-            {
-                Console.WriteLine("ModelState is not valid");
+            //        return RedirectToAction(nameof(Index));
+            //    }
+            //    catch (Exception ex)
+            //    {                 
+            //        Console.WriteLine($"Error saving game: {ex.Message}");
+            //        return View(game);
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("ModelState is not valid");
 
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine($"Validation Error: {error.ErrorMessage}");
-                }
-                return View(game);
-            }
+            //    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            //    {
+            //        Console.WriteLine($"Validation Error: {error.ErrorMessage}");
+            //    }
+            //    ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
+            //    ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
+            //    ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
+                
+            //    return View(game);
+            //}
         }
 
         // GET: Games/Edit/5
@@ -115,14 +118,16 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games.FindAsync(id);
+            var game = await _gamesService.Get(id.Value);
             if (game == null)
             {
                 return NotFound();
             }
-            ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
-            ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
+
+            var dropdownData = await _gamesService.GetDropdownData();
+            ViewData["AwayTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.AwayTeamId);
+            ViewData["HomeTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.HomeTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
             return View(game);
         }
 
@@ -140,27 +145,14 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.GamesId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _gamesService.Save(game);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AwayTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.AwayTeamId);
-            ViewData["HomeTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName", game.HomeTeamId);
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
+
+            var dropdownData = await _gamesService.GetDropdownData();
+            ViewData["AwayTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.AwayTeamId);
+            ViewData["HomeTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", game.HomeTeamId);
+            ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", game.TournamentId);
             return View(game);
         }
 
@@ -172,11 +164,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .Include(g => g.AwayTeam)
-                .Include(g => g.HomeTeam)
-                .Include(g => g.Tournament)
-                .FirstOrDefaultAsync(m => m.GamesId == id);
+            var game = await _gamesService.Get(id.Value);
             if (game == null)
             {
                 return NotFound();
@@ -190,19 +178,9 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var game = await _context.Games.FindAsync(id);
-            if (game != null)
-            {
-                _context.Games.Remove(game);
-            }
-
-            await _context.SaveChangesAsync();
+            await _gamesService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GameExists(Guid id)
-        {
-            return _context.Games.Any(e => e.GamesId == id);
-        }
     }
 }

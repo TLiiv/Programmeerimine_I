@@ -22,10 +22,10 @@ namespace KooliProjekt
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IUsersService, UsersService>();
-
             builder.Services.AddScoped<IUserBetsService, UserBetsService>();
             builder.Services.AddScoped<ITournamentsService, TournamentsService>();
             builder.Services.AddScoped<ITeamsService, TeamsService>();
+            builder.Services.AddScoped<IGamesService, GamesService>();
             builder.Services.AddScoped<ILeaderboardsService, LeaderboardsService>(); 
 
             var app = builder.Build();
