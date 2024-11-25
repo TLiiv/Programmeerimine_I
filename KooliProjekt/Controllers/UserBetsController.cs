@@ -36,7 +36,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var userBets = _userBetsService.Get(id.Value);
+            var userBets = await _userBetsService.Get(id.Value);
               
             if (userBets == null)
             {
@@ -65,9 +65,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                //userBets.BetPlacedDate = DateTime.UtcNow;
-                //userBets.Id = Guid.NewGuid();
-                //_context.Add(userBets);
+
                 await _userBetsService.Save(userBets);
                 return RedirectToAction(nameof(Index));
             }

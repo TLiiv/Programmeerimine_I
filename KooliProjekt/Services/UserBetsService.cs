@@ -14,7 +14,12 @@ namespace KooliProjekt.Services
 
         public async Task<List<UserBets>> AllUserBets() 
         {
-            return await _context.UsersBets.ToListAsync(); 
+            return await _context.UsersBets
+                .Include(u => u.User)
+                .Include(u => u.Game)
+                .Include(u => u.PredictedWinningTeam)
+                .Include(u => u.Tournament)
+                .ToListAsync(); 
         }
 
         public async Task<UserBets> Get(Guid id) 

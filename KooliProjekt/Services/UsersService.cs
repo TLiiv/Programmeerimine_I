@@ -26,19 +26,21 @@ namespace KooliProjekt.Services
 
         public async Task Save(User user)
         {
-            if (user.UserId == default(Guid))
+
+            if (user.UserId == Guid.Empty) 
             {
-                user.UserId = Guid.NewGuid();
-                _context.Users.Add(user);
+                user.UserId = Guid.NewGuid(); 
+                _context.Users.Add(user); 
             }
-            else
+            else 
             {
-                _context.Users.Update(user);
+                _context.Users.Update(user); 
             }
+
+            await _context.SaveChangesAsync();
+
+
       
-            //user.UserId = Guid.NewGuid();<--on ka vaja üle vaadata pärast kas on vaja siia panna või mitte
-            //_context.Users.Add(user); kui update ja create lahku lüüa siis töötaks
-            //await _context.SaveChangesAsync(); 
         }
         public async Task Delete(Guid id)
         {

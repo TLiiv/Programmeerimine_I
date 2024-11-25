@@ -7,7 +7,7 @@ namespace KooliProjekt.Data
     public class Team
     {
         [Key]
-        public Guid TeamId { get; set; } = Guid.NewGuid();
+        public Guid TeamId { get; set; }
 
         [Required(ErrorMessage = "Team name is required.")]
         [StringLength(40, MinimumLength = 4, ErrorMessage = "Team name must be between 5 and 40 characters.")]

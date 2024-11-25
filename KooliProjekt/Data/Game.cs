@@ -6,7 +6,7 @@ namespace KooliProjekt.Data
     public class Game
     {
         [Key]
-        public Guid GamesId { get; set; } = Guid.NewGuid();
+        public Guid GamesId { get; set; }
 
         [Required]
         [DataType(DataType.Date)]

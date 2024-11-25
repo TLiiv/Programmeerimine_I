@@ -5,7 +5,7 @@ namespace KooliProjekt.Data
     public class Tournament
     {
         [Key]
-        public Guid TournamentId { get; set; } = Guid.NewGuid();
+        public Guid TournamentId { get; set; }
 
         [Required(ErrorMessage = "Tournament name is required.")]
         [StringLength(40, MinimumLength = 4, ErrorMessage = "Tournament name must be between 5 and 40 characters.")]

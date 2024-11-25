@@ -6,7 +6,7 @@ namespace KooliProjekt.Data
     public class UserBets
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         [ForeignKey(nameof(User))]

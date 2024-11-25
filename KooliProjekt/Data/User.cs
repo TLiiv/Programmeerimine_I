@@ -5,7 +5,7 @@ namespace KooliProjekt.Data
     public class User
     {
         [Key]
-        public Guid UserId { get; set; } = Guid.NewGuid();
+        public Guid UserId { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
         [MinLength(4, ErrorMessage = "Username must be at least 4 characters long.")]

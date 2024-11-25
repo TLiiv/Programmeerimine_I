@@ -6,7 +6,7 @@ namespace KooliProjekt.Data
     public class Leaderboard
     {
         [Key]
-        public Guid LeaderBoardId { get; set; } = Guid.NewGuid();
+        public Guid LeaderBoardId { get; set; }
 
         [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
