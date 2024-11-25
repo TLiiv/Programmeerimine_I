@@ -12,12 +12,12 @@ namespace KooliProjekt.Controllers
 {
     public class UserBetsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        
         private readonly IUserBetsService _userBetsService;
 
-        public UserBetsController(ApplicationDbContext context,IUserBetsService userBetsService)
+        public UserBetsController(IUserBetsService userBetsService)
         {
-            _context = context;
+            
             _userBetsService = userBetsService;
         }
 
@@ -47,12 +47,15 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: UserBets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["GameId"] = new SelectList(_context.Games, "GamesId", "GamesId");
-            ViewData["PredictedWinningTeamId"] = new SelectList(_context.Teams, "TeamId", "TeamName");
-            ViewData["TournamentId"] = new SelectList(_context.Tournaments, "TournamentId", "TournamentName");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
+            var dropDownData = await _userBetsService.GetDropdownData();
+           
+            ViewData["GameId"] = new SelectList(dropDownData.Games, "GamesId", "GamesId");
+            ViewData["PredictedWinningTeamId"] = new SelectList(dropDownData.Teams, "TeamId", "TeamName");
+            ViewData["TournamentId"] = new SelectList(dropDownData.Tournaments, "TournamentId", "TournamentName");
+            ViewData["UserId"] = new SelectList(dropDownData.Users, "UserId", "Email");
+
             return View();
         }
 
