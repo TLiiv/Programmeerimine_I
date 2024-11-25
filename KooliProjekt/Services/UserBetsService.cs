@@ -32,6 +32,16 @@ namespace KooliProjekt.Services
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<(List<Game> Games, List<Team> Teams, List<Tournament> Tournaments, List<User> Users)> GetDropdownData()
+        {
+            var Games = await _context.Games.ToListAsync();
+            var Teams = await _context.Teams.ToListAsync();
+            var Tournaments = await _context.Tournaments.ToListAsync();
+            var Users = await _context.Users.ToListAsync();
+
+            return (Games, Teams, Tournaments, Users);
+        }
+
         public async Task Save(UserBets userBets)
         {
             if (userBets.Id == Guid.Empty)

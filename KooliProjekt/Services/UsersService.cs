@@ -1,4 +1,5 @@
 ﻿using KooliProjekt.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Services
@@ -24,6 +25,8 @@ namespace KooliProjekt.Services
                
         }
 
+      
+
         public async Task Save(User user)
         {
 
@@ -39,8 +42,6 @@ namespace KooliProjekt.Services
 
             await _context.SaveChangesAsync();
 
-
-      
         }
         public async Task Delete(Guid id)
         {
