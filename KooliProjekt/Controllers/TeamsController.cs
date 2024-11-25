@@ -6,22 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class TeamsController : Controller
     {
-        private readonly ApplicationDbContext _context;
 
-        public TeamsController(ApplicationDbContext context)
+        private readonly ITeamsService _teamsService;
+
+        public TeamsController(ITeamsService teamsService)
         {
-            _context = context;
+            _teamsService = teamsService;
         }
 
         // GET: Teams
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Teams.ToListAsync());
+            var data = await _teamsService.AllTeams();
+
+            return View(data);
         }
 
         // GET: Teams/Details/5
@@ -32,8 +36,8 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Teams
-                .FirstOrDefaultAsync(m => m.TeamId == id);
+            var team = await _teamsService.Get(id.Value);
+                
             if (team == null)
             {
                 return NotFound();
@@ -57,9 +61,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                team.TeamId = Guid.NewGuid();
-                _context.Add(team);
-                await _context.SaveChangesAsync();
+               await _teamsService.Save(team);
                 return RedirectToAction(nameof(Index));
             }
             return View(team);
@@ -73,7 +75,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _teamsService.Get(id.Value);
             if (team == null)
             {
                 return NotFound();
@@ -95,22 +97,7 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(team);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TeamExists(team.TeamId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _teamsService.Save(team);
                 return RedirectToAction(nameof(Index));
             }
             return View(team);
@@ -124,8 +111,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Teams
-                .FirstOrDefaultAsync(m => m.TeamId == id);
+            var team = await _teamsService.Get(id.Value);
             if (team == null)
             {
                 return NotFound();
@@ -139,19 +125,10 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var team = await _context.Teams.FindAsync(id);
-            if (team != null)
-            {
-                _context.Teams.Remove(team);
-            }
-
-            await _context.SaveChangesAsync();
+            await _teamsService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TeamExists(Guid id)
-        {
-            return _context.Teams.Any(e => e.TeamId == id);
-        }
+    
     }
 }
