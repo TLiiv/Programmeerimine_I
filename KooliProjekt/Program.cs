@@ -24,6 +24,7 @@ namespace KooliProjekt
             builder.Services.AddScoped<IUsersService, UsersService>();
 
             builder.Services.AddScoped<IUserBetsService, UserBetsService>();
+            builder.Services.AddScoped<ITournamentsService, TournamentsService>();
 
             var app = builder.Build();
 

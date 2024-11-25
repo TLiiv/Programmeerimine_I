@@ -6,22 +6,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class TournamentsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+    
 
-        public TournamentsController(ApplicationDbContext context)
+        private readonly ITournamentsService _tournamentsService;
+
+        public TournamentsController(ITournamentsService tournamentsService)
         {
-            _context = context;
+           
+            _tournamentsService = tournamentsService;
         }
 
         // GET: Tournaments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tournaments.ToListAsync());
+            var data = await _tournamentsService.AllTournaments();
+
+            return View(data);
         }
 
         // GET: Tournaments/Details/5
@@ -32,8 +38,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var tournament = await _context.Tournaments
-                .FirstOrDefaultAsync(m => m.TournamentId == id);
+            var tournament = await _tournamentsService.Get(id.Value);
             if (tournament == null)
             {
                 return NotFound();
@@ -57,9 +62,9 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                tournament.TournamentId = Guid.NewGuid();
-                _context.Add(tournament);
-                await _context.SaveChangesAsync();
+                await _tournamentsService.Save(tournament);
+
+               
                 return RedirectToAction(nameof(Index));
             }
             return View(tournament);
@@ -73,7 +78,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var tournament = await _context.Tournaments.FindAsync(id);
+            var tournament = await _tournamentsService.Get(id.Value);
             if (tournament == null)
             {
                 return NotFound();
@@ -95,22 +100,8 @@ namespace KooliProjekt.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(tournament);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TournamentExists(tournament.TournamentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                await _tournamentsService.Save(tournament);  
                 return RedirectToAction(nameof(Index));
             }
             return View(tournament);
@@ -124,8 +115,7 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var tournament = await _context.Tournaments
-                .FirstOrDefaultAsync(m => m.TournamentId == id);
+            var tournament = await _tournamentsService.Get(id.Value);
             if (tournament == null)
             {
                 return NotFound();
@@ -139,19 +129,11 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var tournament = await _context.Tournaments.FindAsync(id);
-            if (tournament != null)
-            {
-                _context.Tournaments.Remove(tournament);
-            }
+            
+             await _tournamentsService.Delete(id);
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TournamentExists(Guid id)
-        {
-            return _context.Tournaments.Any(e => e.TournamentId == id);
-        }
     }
 }

@@ -46,7 +46,7 @@ namespace KooliProjekt.Services
         {
             if (userBets.Id == Guid.Empty)
             {
-                userBets.BetPlacedDate = DateTime.UtcNow;
+                
                 userBets.Id = Guid.NewGuid();
                 _context.UsersBets.Add(userBets);
             }
