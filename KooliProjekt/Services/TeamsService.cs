@@ -1,6 +1,6 @@
 ﻿using KooliProjekt.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+//using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor; commented because after .NET 9.0 codegen broke
 
 namespace KooliProjekt.Services
 {
