@@ -1,4 +1,5 @@
 ﻿using KooliProjekt.Data;
+using KooliProjekt.Search;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Services
@@ -12,13 +13,33 @@ namespace KooliProjekt.Services
             _context = context;
         }
 
-        public async Task<List<Game>> AllGames() 
-        { 
-            return await _context.Games
-                .Include(g => g.AwayTeam)
-                .Include(g => g.HomeTeam)
-                .Include(g => g.Tournament)
-                .ToListAsync();
+        public async Task<List<Game>> AllGames(GamesSearch search = null) 
+        {
+
+
+            //Search LINQ
+            var query = _context.Games.AsQueryable();
+            //    if (search != null)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(search.Keyword))
+            //        {
+            //            var keyword = search.Keyword.Trim();
+
+            //            query = query.Where(g =>
+            //    g.Tournament != null && 
+            //    g.Tournament.TournamentName.Contains(keyword)
+            //);
+
+            //        }
+            //    }
+            
+
+            return await query
+                        .Include(g => g.AwayTeam)
+                        .Include(g => g.HomeTeam)
+                        .Include(g => g.Tournament)
+                        .ToListAsync();
+          
         }
 
         public async Task<Game>Get(Guid id)

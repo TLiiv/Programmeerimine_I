@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using KooliProjekt.Search;
 
 namespace KooliProjekt.Controllers
 {
@@ -21,9 +22,9 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Teams
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(TeamsSearch search = null)
         {
-            var data = await _teamsService.AllTeams();
+            var data = await _teamsService.AllTeams(search);
 
             return View(data);
         }

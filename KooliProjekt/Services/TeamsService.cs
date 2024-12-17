@@ -1,4 +1,5 @@
 ﻿using KooliProjekt.Data;
+using KooliProjekt.Search;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor; //commented because after .NET 9.0 codegen broke
 
@@ -14,9 +15,27 @@ namespace KooliProjekt.Services
             _context = context;
         }
 
-        public async Task<List<Team>> AllTeams()
+        public async Task<List<Team>> AllTeams(TeamsSearch search = null)
         {
-            return await _context.Teams.ToListAsync();
+            var query = _context.Teams.AsQueryable();
+
+            if (search != null)
+            {
+                if (!string.IsNullOrWhiteSpace(search.Keyword))
+                {
+                    search.Keyword = search.Keyword.Trim();
+
+                    query = query.Where(team=> team.TeamName.Contains(search.Keyword));
+  
+   
+
+                }
+            }
+
+            return await query
+                    .ToListAsync();
+
+            //return await _context.Teams.ToListAsync();
         }
 
         public async Task<Team> Get(Guid id)

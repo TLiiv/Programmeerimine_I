@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using KooliProjekt.Search;
 
 namespace KooliProjekt.Controllers
 {
@@ -22,9 +23,9 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(GamesSearch search = null)
         {
-            var data = await _gamesService.AllGames();
+            var data = await _gamesService.AllGames(search);
             return View(data);
         }
 
