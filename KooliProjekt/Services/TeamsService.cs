@@ -33,6 +33,7 @@ namespace KooliProjekt.Services
             }
 
             return await query
+                .OrderBy(team=>team.TeamName)
                     .ToListAsync();
 
             //return await _context.Teams.ToListAsync();
