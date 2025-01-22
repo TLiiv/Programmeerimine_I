@@ -1,6 +1,7 @@
 ﻿using KooliProjekt.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using Xunit;
 
 namespace KooliProjekt.UnitTests.ControllerTests
@@ -38,8 +39,9 @@ namespace KooliProjekt.UnitTests.ControllerTests
             Assert.NotNull(result);
             Assert.True(result.ViewName == "Privacy" ||
                  string.IsNullOrEmpty(result.ViewName));
-        }     [Fact]
-        public void Error_should_return_correct_view()
+        }     
+        [Fact]
+        public void Error_should_return_correct_view_with_Httpcontext()
         {
             // Arrange
             var controller = new HomeController(); 
@@ -47,6 +49,23 @@ namespace KooliProjekt.UnitTests.ControllerTests
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
 
             // Act
+
+            var result = controller.Error() as ViewResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.ViewName == "Error" ||
+                 string.IsNullOrEmpty(result.ViewName));
+        }     
+        [Fact]
+        public void Error_should_return_correct_view_with_Current_Activity()
+        {
+            // Arrange
+            var controller = new HomeController(); 
+            Activity.Current = new Activity("acitvity").Start();
+
+            // Act
+
             var result = controller.Error() as ViewResult;
 
             // Assert
