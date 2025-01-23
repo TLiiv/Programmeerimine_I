@@ -37,6 +37,7 @@ namespace KooliProjekt.Controllers
             }
 
             var user = await _usersService.Get(id.Value);
+
             if (user == null)
             {
                 return NotFound();
