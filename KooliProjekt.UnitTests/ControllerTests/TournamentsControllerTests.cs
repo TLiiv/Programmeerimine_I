@@ -59,6 +59,10 @@ namespace KooliProjekt.UnitTests.ControllerTests
 
             // Assert
             //viewname check
+            Assert.NotNull(result);
+            Assert.True(result.ViewName == "Index" ||
+                        string.IsNullOrEmpty(result.ViewName));
+
             var model = result.Model as List<Tournament>;
             Assert.NotNull(model);
             Assert.Equal(data.Count, model.Count);

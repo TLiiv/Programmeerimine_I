@@ -73,7 +73,12 @@ namespace KooliProjekt.UnitTests.ControllerTests
             var result = await controller.Index() as ViewResult;
 
             // Assert
+           
             //viewname check
+            Assert.NotNull(result);
+            Assert.True(result.ViewName == "Index" ||
+                        string.IsNullOrEmpty(result.ViewName));
+
             var model = result.Model as List<Game>;
             Assert.NotNull(model);
             Assert.Equal(data.Count, model.Count);
