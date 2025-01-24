@@ -16,8 +16,8 @@ namespace KooliProjekt.UnitTests.ControllerTests
         public async void Index_should_return_correct_view_and_data()
         {
             // Arrange
-            var userServiceMock = new Mock<IUserBetsService>();
-            var controller = new UserBetsController(userServiceMock.Object);
+            var userBetsServiceMock = new Mock<IUserBetsService>();
+            var controller = new UserBetsController(userBetsServiceMock.Object);
 
             var data = new List<UserBets>
             {
@@ -29,7 +29,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
                     GameId = Guid.NewGuid(),
                     Game = new Game{GamesId = Guid.NewGuid()},
                     PredictedWinningTeamId = Guid.NewGuid(),
-                    PredictedWinningTeam = new Team { },
+                    PredictedWinningTeam = new Team { TeamId = Guid.NewGuid()},
                     TournamentId = Guid.NewGuid(),
                     Tournament = new Tournament { TournamentId = Guid.NewGuid()},
                     PredictedHomeGoals = 1,
@@ -40,7 +40,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
                 },
             };
 
-            userServiceMock.Setup(service => service.AllUserBets()).ReturnsAsync(data);
+            userBetsServiceMock.Setup(service => service.AllUserBets()).ReturnsAsync(data);
             // Act
             var result = await controller.Index() as ViewResult;
 
