@@ -1,4 +1,5 @@
-﻿using KooliProjekt.Controllers;
+﻿using Azure.Identity;
+using KooliProjekt.Controllers;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
 using Microsoft.AspNetCore.Http;
@@ -14,15 +15,29 @@ namespace KooliProjekt.UnitTests.ControllerTests
         [Fact]
         public async void Index_should_return_correct_view_and_data()
         {
-            //data needed User 	Tournament Game,PredictedWinningTeam,PredictedHomeGoals,PredictedAwayGoals ,AccountBalance BetAmount BetPlacedDate 	
-
             // Arrange
             var userServiceMock = new Mock<IUserBetsService>();
             var controller = new UserBetsController(userServiceMock.Object);
 
             var data = new List<UserBets>
             {
-                
+                new UserBets
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = Guid.NewGuid(),
+                    User = new User{UserId = Guid.NewGuid(), UserName = "Test User" },
+                    GameId = Guid.NewGuid(),
+                    Game = new Game{GamesId = Guid.NewGuid()},
+                    PredictedWinningTeamId = Guid.NewGuid(),
+                    PredictedWinningTeam = new Team { },
+                    TournamentId = Guid.NewGuid(),
+                    Tournament = new Tournament { TournamentId = Guid.NewGuid()},
+                    PredictedHomeGoals = 1,
+                    PredictedAwayGoals = 2,
+                    AccountBalance = 100.0,
+                    BetAmount = 10.0,
+                    BetPlacedDate = DateTime.UtcNow
+                },
             };
 
             userServiceMock.Setup(service => service.AllUserBets()).ReturnsAsync(data);
@@ -30,17 +45,15 @@ namespace KooliProjekt.UnitTests.ControllerTests
             var result = await controller.Index() as ViewResult;
 
             // Assert
-
             //viewname check
             Assert.NotNull(result);
             Assert.True(result.ViewName == "Index" ||
                         string.IsNullOrEmpty(result.ViewName));
             //view data check
-        //    var model = result.Model as List<User>;
-        //    Assert.NotNull(model); // Ensure the model is not null
-        //    Assert.Equal(2, model.Count); // Ensure the correct number of users are returned
-        //    Assert.Equal("user1", model[0].UserName); // Check first user
-        //    Assert.Equal("user2", model[1].UserName); // Check second user
+            var model = result.Model as List<UserBets>;
+            Assert.NotNull(model);
+            Assert.Equal(data.Count, model.Count); 
+            Assert.Equal(data[0].Id, model[0].Id);
         }
 
     }
