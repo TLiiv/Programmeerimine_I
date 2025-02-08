@@ -129,7 +129,5 @@ namespace KooliProjekt.Controllers
             await _usersService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
-     
     }
 }

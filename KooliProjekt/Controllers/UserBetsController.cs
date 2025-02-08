@@ -152,8 +152,6 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-
-
             await _userBetsService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
