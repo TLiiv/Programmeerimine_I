@@ -89,9 +89,9 @@ namespace KooliProjekt.UnitTests.ControllerTests
         }
 
         //POST
-        //Create
+
         [Fact]
-        public async Task Create_Should_Redirect_After_Succeful_User_Creation()
+        public async Task Create_Should_Redirect_After_Successful_User_Creation()
         {
             //Arrange
             var user = new User
@@ -147,37 +147,6 @@ namespace KooliProjekt.UnitTests.ControllerTests
                         string.IsNullOrEmpty(result.ViewName));
         }
 
-
-        //Edit
-        [Fact]
-        public async Task Edit_Should_Return_Not_Found_When_UserId_Is_Missing()
-        {
-
-            // Arrange
-            var invalidUserId = Guid.NewGuid();
-            var user = new User
-            {
-                UserId = Guid.NewGuid(),  // Different ID than invalidUserId
-                UserName = "testUser",
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@example.com",
-                Password = "password",
-                PhoneNumber = "123456789",
-                IsAdmin = false
-            };
-
-
-            // Act
-            var result = await _controller.Edit(invalidUserId, user);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-            Assert.NotNull(result);
-        }
-
-
-
         [Fact]
         public async Task Edit_Should_Return_View_With_Changed_User_Info()
         {
@@ -207,6 +176,35 @@ namespace KooliProjekt.UnitTests.ControllerTests
             _userServiceMock.VerifyAll(); //check that save method is used
         }
 
+
+        [Fact]
+        public async Task Edit_Should_Return_Not_Found_When_UserId_Is_Missing()
+        {
+
+            // Arrange
+            var invalidUserId = Guid.NewGuid();
+            var user = new User
+            {
+                UserId = Guid.NewGuid(),  // Different ID than invalidUserId
+                UserName = "testUser",
+                FirstName = "Test",
+                LastName = "User",
+                Email = "test@example.com",
+                Password = "password",
+                PhoneNumber = "123456789",
+                IsAdmin = false
+            };
+
+
+            // Act
+            var result = await _controller.Edit(invalidUserId, user);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
+            Assert.NotNull(result);
+        }
+
+        
         [Fact]
         public async Task Edit_Should_Return_Error_When_Model_Not_Valid()
         {
@@ -256,7 +254,5 @@ namespace KooliProjekt.UnitTests.ControllerTests
 
             _userServiceMock.VerifyAll();
         }
-
     }
-
 }
