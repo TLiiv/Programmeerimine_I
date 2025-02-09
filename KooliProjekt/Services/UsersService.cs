@@ -21,8 +21,7 @@ namespace KooliProjekt.Services
         {
             return await _context.Users
                 .Include(user => user.UserBets)
-                .FirstOrDefaultAsync(u => u.UserId == id);
-               
+                .FirstOrDefaultAsync(u => u.UserId == id);    
         }
 
       
@@ -49,6 +48,7 @@ namespace KooliProjekt.Services
                 .Where(user => user.UserId == id)
                 .ExecuteDeleteAsync();
         }
+
     }
 }
 
