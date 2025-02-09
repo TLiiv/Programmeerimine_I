@@ -102,6 +102,8 @@ namespace KooliProjekt.UnitTests.ControllerTests
             Assert.Equal(data[0].HomeTeam.TeamName, model[0].HomeTeam.TeamName);
             Assert.Equal(data[0].AwayTeam.TeamName, model[0].AwayTeam.TeamName);
         }
+
+        //POST
         [Fact]
         public async Task Create_Should_Redirect_To_Correct_View_On_Successful_Game_Creation()
         {
@@ -206,6 +208,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
 
             _gamesServiceMock.VerifyAll();
         }
+
         [Fact]
         public async Task Edit_Should_Return_Not_Found_When_Incorrect_Id()
         {
