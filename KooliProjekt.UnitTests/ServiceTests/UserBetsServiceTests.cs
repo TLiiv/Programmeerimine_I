@@ -183,6 +183,7 @@ namespace KooliProjekt.UnitTests.ServiceTests
             //Arrange
             var userbet = new UserBets
             {
+                Id = Guid.Empty,
                 UserId = Guid.NewGuid(),
                 PredictedHomeGoals = 2,
                 PredictedAwayGoals = 1,
@@ -218,12 +219,13 @@ namespace KooliProjekt.UnitTests.ServiceTests
                 .FirstOrDefaultAsync(ub => ub.UserId == userbet.UserId && ub.GameId == userbet.GameId);
 
             Assert.NotNull(savedUserBet);
+            Assert.NotEqual(Guid.Empty, savedUserBet.Id);
             Assert.NotNull(savedUserBet.Id);
 
         }
 
         [Fact]
-        public async Task Save_Should_Update_Existing_User_When_User_Bet_Id_Is_Provided()
+        public async Task Save_Should_Update_Existing_Userbet_When_UserbetId_Is_Provided()
         {
             //Arrange
             var existingUserbet = new UserBets
