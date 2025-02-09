@@ -19,13 +19,19 @@ namespace KooliProjekt.UnitTests.ControllerTests
 {
     public class GamesControllerTests
     {
+        private readonly Mock<IGamesService> _gamesServiceMock;
+        private readonly GamesController _controller;
+        
+        public GamesControllerTests() 
+        {
+            _gamesServiceMock = new Mock<IGamesService>();
+            _controller = new GamesController(_gamesServiceMock.Object);
+        }
         [Fact]
-        public async void Index_should_return_correct_view_and_data()
+        public async Task Index_should_return_correct_view_and_data()
         {
             // Arrange
-            var gamesServiceMock = new Mock<IGamesService>();
-            var controller = new GamesController(gamesServiceMock.Object);
-
+           
             var homeTeam = new Team
             {
                 TeamId = Guid.NewGuid(),
@@ -66,11 +72,11 @@ namespace KooliProjekt.UnitTests.ControllerTests
             };
 
 
-            gamesServiceMock.Setup(service => service.AllGames(It.IsAny<GamesSearch>()))
+            _gamesServiceMock.Setup(service => service.AllGames(It.IsAny<GamesSearch>()))
                     .ReturnsAsync(data);
 
             // Act
-            var result = await controller.Index() as ViewResult;
+            var result = await _controller.Index() as ViewResult;
 
             // Assert
            
@@ -95,6 +101,196 @@ namespace KooliProjekt.UnitTests.ControllerTests
             //check if we can get correct teams name 
             Assert.Equal(data[0].HomeTeam.TeamName, model[0].HomeTeam.TeamName);
             Assert.Equal(data[0].AwayTeam.TeamName, model[0].AwayTeam.TeamName);
+        }
+        [Fact]
+        public async Task Create_Should_Redirect_To_Correct_View_On_Successful_Game_Creation()
+        {
+            //Act
+
+            var game = new Game
+                    {
+                GamesId = Guid.NewGuid(),
+                GameStartDate = DateTime.Now,
+                GameStartTime = DateTime.Now,
+                HomeTeamId = Guid.NewGuid(),
+                AwayTeamId = Guid.NewGuid(),
+                AreTeamsConfirmed = true,
+                TournamentId = Guid.NewGuid()
+            };
+            _gamesServiceMock
+                .Setup(service => service.Save(game))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+            // Assign
+            var result = await _controller.Create(game) as RedirectToActionResult;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ActionName);
+
+            _gamesServiceMock.VerifyAll(); //check that save method is used
+        }
+
+        [Fact]
+        public async Task Create_Should_Stay_On_View_When_Model_Is_Not_Valid()
+        {
+            //Arrange
+            var game = new Game
+            {
+                GamesId = Guid.NewGuid(),
+                GameStartDate = DateTime.Now,
+                GameStartTime = DateTime.Now,
+                HomeTeamId = Guid.NewGuid(),
+                AwayTeamId = Guid.NewGuid(),
+                AreTeamsConfirmed = true,
+                TournamentId = Guid.NewGuid()
+            };
+
+            _gamesServiceMock
+               .Setup(service => service.Save(game))
+               .Returns(Task.CompletedTask);
+
+            _gamesServiceMock
+                .Setup(service => service.GetDropdownData())
+                .ReturnsAsync((Teams: new List<Team>
+                 {
+                     new Team { TeamId = Guid.NewGuid(), TeamName = "Team A" },
+                     new Team { TeamId = Guid.NewGuid(), TeamName = "Team B" }
+                 },
+                 Tournaments: new List<Tournament>
+                 {
+                     new Tournament { TournamentId = Guid.NewGuid(), TournamentName = "Tournament X" },
+                     new Tournament { TournamentId = Guid.NewGuid(), TournamentName = "Tournament Y" }
+                 }));
+
+
+
+            //Act
+            _controller.ModelState.AddModelError("error", "error");
+            var result = await _controller.Create(game) as ViewResult;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.True(result.ViewName == "Create" ||
+                        string.IsNullOrEmpty(result.ViewName));
+        }
+
+      
+        [Fact]
+        public async Task Edit_Should_Redirect_When_Game_Info_Is_Changed()
+        {
+            //Arrange
+            var gameId = Guid.NewGuid();
+            var game = new Game
+            {
+                GamesId = gameId,
+                GameStartDate = DateTime.Now,
+                GameStartTime = DateTime.Now,
+                HomeTeamId = Guid.NewGuid(),
+                AwayTeamId = Guid.NewGuid(),
+                AreTeamsConfirmed = true,
+                TournamentId = Guid.NewGuid()
+            };
+
+            _gamesServiceMock
+                .Setup(service => service.Save(game))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+
+            //Act
+            var result = await _controller.Edit(gameId,game) as RedirectToActionResult;
+ 
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ActionName);
+
+            _gamesServiceMock.VerifyAll();
+        }
+        [Fact]
+        public async Task Edit_Should_Return_Not_Found_When_Incorrect_Id()
+        {
+            //Arrange
+            var gameId = Guid.NewGuid();
+            var incorrectId = Guid.NewGuid();
+            var game = new Game
+            {
+                GamesId = gameId,
+            };
+            //Act
+            var result = await _controller.Edit(incorrectId,game);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public async Task Edit_Should_Return_Error_When_Model_Not_Valid_And_Return_Correct_View()
+        {
+            //Arrange
+            var gameId = Guid.NewGuid();
+            var homeTeamId = Guid.NewGuid();
+            var awayTeamId = Guid.NewGuid();
+            var tournamentId = Guid.NewGuid();
+            
+            var game = new Game
+            {
+                GamesId = gameId,
+                GameStartDate = DateTime.Now,
+                GameStartTime = DateTime.Now,
+                HomeTeamId = Guid.NewGuid(),
+                AwayTeamId = Guid.NewGuid(),
+                AreTeamsConfirmed = true,
+                TournamentId = Guid.NewGuid()
+            };
+            
+            //dropdown data 
+            var teams = new List<Team>
+            {
+                new Team { TeamId = homeTeamId, TeamName = "Home Team" },
+                new Team { TeamId = awayTeamId, TeamName = "Away Team" }
+            };
+
+                    var tournaments = new List<Tournament>
+            {
+                new Tournament { TournamentId = tournamentId, TournamentName = "Test Tournament" }
+            };
+
+
+
+            _gamesServiceMock
+                .Setup(service => service.GetDropdownData())
+                .ReturnsAsync((teams, tournaments));
+
+
+            //Act
+            _controller.ModelState.AddModelError("error", "error"); //Give error to model and
+            var result = await _controller.Edit(game.GamesId, game) as ViewResult;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.False(result.ViewData.ModelState.IsValid); //check if the error works and modelstate is false
+            Assert.True(result.ViewName == "Create" ||
+                       string.IsNullOrEmpty(result.ViewName));
+
+        }
+        [Fact]
+        public async Task DeleteConfirmed_Should_Redirect_On_Correct_Id_And_Successful_Delete()
+        {
+            //Arrange
+            var Id = Guid.NewGuid();
+            _gamesServiceMock
+                .Setup(service => service.Delete(Id))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+            //Act
+
+            var result = await _controller.DeleteConfirmed(Id) as RedirectToActionResult;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ActionName);
+
+            _gamesServiceMock.VerifyAll();
         }
     }
 }

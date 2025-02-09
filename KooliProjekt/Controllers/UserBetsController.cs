@@ -79,6 +79,7 @@ namespace KooliProjekt.Controllers
             ViewData["PredictedWinningTeamId"] = new SelectList(dropdownData.Teams, "TeamId", "TeamName", userBets.PredictedWinningTeamId);
             ViewData["TournamentId"] = new SelectList(dropdownData.Tournaments, "TournamentId", "TournamentName", userBets.TournamentId);
             ViewData["UserId"] = new SelectList(dropdownData.Users, "UserId", "Email", userBets.UserId);
+            
             return View(userBets);
         }
 

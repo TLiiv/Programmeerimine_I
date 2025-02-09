@@ -65,11 +65,11 @@ namespace KooliProjekt.UnitTests.ControllerTests
             var id = Guid.NewGuid();//create userId variable
 
             var data = new List<User>
-        {
+            {
             new User { UserId = id, UserName = "user1", FirstName = "First", LastName = "User", Email = "user1@example.com",PhoneNumber="51231231", IsAdmin = true },
-         };
+            };
 
-            _userServiceMock.Setup(service => service.Get(id)) // `userId` is passed to mock `Get`
+            _userServiceMock.Setup(service => service.Get(id)) 
                            .ReturnsAsync(data.FirstOrDefault(u => u.UserId == id)); // Look for the `UserId` in the list that matches the `userId` variable
 
             // Act

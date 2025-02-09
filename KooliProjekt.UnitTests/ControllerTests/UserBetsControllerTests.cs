@@ -62,6 +62,9 @@ namespace KooliProjekt.UnitTests.ControllerTests
             Assert.Equal(data.Count, model.Count);
             Assert.Equal(data[0].Id, model[0].Id);
         }
+
+        //POST
+
         [Fact]
         public async Task Create_Should_Redirect_To_Correct_View_On_Successful_UserBet_Creation()
         {
@@ -188,7 +191,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
         }
 
         [Fact]
-        public async Task Edit_Should_Return_Not_Found_When_Id_Is_Null()
+        public async Task Edit_Should_Return_Not_Found_When_Id_Is_Incorrect()
         {
 
             // Arrange
@@ -223,7 +226,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
 
         }
         [Fact]
-        public async Task Edit_Should_Return_Error_When_Model_Not_Valid()
+        public async Task Edit_Should_Return_Error_And_Correct_View_When_Model_Not_Valid()
         {
             //Arrange
             var bet = new UserBets
@@ -264,6 +267,8 @@ namespace KooliProjekt.UnitTests.ControllerTests
             //Assert
             Assert.NotNull(result);
             Assert.False(result.ViewData.ModelState.IsValid); //check if the error works and modelstate is false
+            Assert.True(result.ViewName == "Edit" ||
+                       string.IsNullOrEmpty(result.ViewName));
         }
 
         [Fact]
