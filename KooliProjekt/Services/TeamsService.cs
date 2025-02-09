@@ -26,9 +26,6 @@ namespace KooliProjekt.Services
                     search.Keyword = search.Keyword.Trim();
 
                     query = query.Where(team=> team.TeamName.Contains(search.Keyword));
-  
-   
-
                 }
             }
 
