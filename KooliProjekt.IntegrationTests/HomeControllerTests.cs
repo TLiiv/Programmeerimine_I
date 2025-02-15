@@ -1,0 +1,41 @@
+﻿using System.Threading.Tasks;
+using KooliProjekt.IntegrationTests.Helpers;
+using Xunit;
+
+namespace KooliProjekt.IntegrationTests
+{
+    [Collection("Sequential")]
+    public class HomeControllerTests : TestBase
+    {
+        [Theory]
+        [InlineData("/")]
+        [InlineData("/Home/Privacy")]
+        public async Task Get_EndpointsReturnSuccessAndCorrectContentType(string url)
+        {
+            // Arrange
+            var client = Factory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+        }
+
+        //[Fact]
+
+        //public async Task Get_AnonymousCanAccessPrivacy()
+        //{
+        //    // Arrange
+        //    using var client = Factory.CreateClient();
+
+        //    // Act
+        //    using var response = await client.GetAsync("/Home/Privacy");
+
+        //    // Assert
+        //    response.EnsureSuccessStatusCode();
+        //    Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+        //}
+    }
+}
