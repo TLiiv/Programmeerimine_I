@@ -18,7 +18,6 @@ namespace KooliProjekt.IntegrationTests
         public UserBetsControllerTests()
         {
             _client = Factory.CreateClient();
-            //Get fake db data
             _context = (ApplicationDbContext)Factory.Services.GetService(typeof(ApplicationDbContext));
 
         }
@@ -37,14 +36,7 @@ namespace KooliProjekt.IntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
         }
-        //[Theory]
-        //[InlineData("/UserBets")]
-        //[InlineData("/UserBets/Details")]
-        //[InlineData("/UserBets/Create")]
-        //[InlineData("/UserBets/Edit")]
-        //[InlineData("/UserBets/Delete")]
         
-
         [Theory]
         [InlineData("/UserBets/Details/")]
         [InlineData("/UserBets/Edit/")]

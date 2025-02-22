@@ -19,7 +19,6 @@ namespace KooliProjekt.IntegrationTests
         public UserControllerTests() 
         {
             _client = Factory.CreateClient();
-            //Get fake db data
             _context = (ApplicationDbContext)Factory.Services.GetService(typeof(ApplicationDbContext));
             
         }
