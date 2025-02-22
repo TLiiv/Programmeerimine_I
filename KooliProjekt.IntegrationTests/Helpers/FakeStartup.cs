@@ -36,7 +36,7 @@ namespace KooliProjekt.IntegrationTests.Helpers
                     .AddApplicationPart(typeof(HomeController).Assembly);
 
 
-            services.AddScoped<ITodoListService, TodoListService>();    
+           // services.AddScoped<ITodoListService, TodoListService>();    
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

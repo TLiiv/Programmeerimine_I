@@ -30,12 +30,23 @@ namespace KooliProjekt.Data
                 .WithMany()
                 .HasForeignKey(g => g.AwayTeamId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             //modelBuilder.Entity<UserBets>()
             //.HasOne(bet => bet.User)
             //.WithMany(user => user.UserBets)
             //.HasForeignKey(bet => bet.UserId)
             //.OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserBets>()
+                .HasOne(bet => bet.User)
+                .WithMany(user => user.UserBets)
+                .HasForeignKey(bet => bet.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+            
+            modelBuilder.Entity<UserBets>()
+                .HasOne(bet => bet.Tournament)
+                .WithMany() 
+                .HasForeignKey(bet => bet.TournamentId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 
