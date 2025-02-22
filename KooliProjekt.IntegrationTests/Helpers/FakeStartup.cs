@@ -35,8 +35,13 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddControllersWithViews()
                     .AddApplicationPart(typeof(HomeController).Assembly);
 
-
-           // services.AddScoped<ITodoListService, TodoListService>();    
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUserBetsService, UserBetsService>();
+            services.AddScoped<ITournamentsService, TournamentsService>();
+            services.AddScoped<ITeamsService, TeamsService>();
+            services.AddScoped<IGamesService, GamesService>();
+            services.AddScoped<ILeaderboardsService, LeaderboardsService>();
+            // services.AddScoped<ITodoListService, TodoListService>();    
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
