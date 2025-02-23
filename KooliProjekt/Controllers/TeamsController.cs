@@ -63,7 +63,7 @@ namespace KooliProjekt.Controllers
             if (ModelState.IsValid)
             {
                await _teamsService.Save(team);
-                return RedirectToAction(nameof(Index));
+               return RedirectToAction(nameof(Index));
             }
             return View(team);
         }
@@ -99,7 +99,7 @@ namespace KooliProjekt.Controllers
             if (ModelState.IsValid)
             {
                 await _teamsService.Save(team);
-                return RedirectToAction(nameof(Index));
+                
             }
             return View(team);
         }
