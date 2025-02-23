@@ -32,6 +32,8 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+
             services.AddControllersWithViews()
                     .AddApplicationPart(typeof(HomeController).Assembly);
 
@@ -41,7 +43,7 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddScoped<ITeamsService, TeamsService>();
             services.AddScoped<IGamesService, GamesService>();
             services.AddScoped<ILeaderboardsService, LeaderboardsService>();
-            // services.AddScoped<ITodoListService, TodoListService>();    
+              
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

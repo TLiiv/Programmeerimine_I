@@ -1,6 +1,7 @@
 using KooliProjekt.Data;
 using KooliProjekt.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt
@@ -10,6 +11,18 @@ namespace KooliProjekt
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            ////AntiForgeryToken Ignore on integration tests
+            //if (builder.Environment.IsEnvironment("Testing"))
+            //{
+            //    builder.Services.AddControllersWithViews(options =>
+            //    {
+            //        options.Filters.Add(new IgnoreAntiforgeryTokenAttribute());
+            //    });
+            //}
+            //else
+            //{
+            //    builder.Services.AddControllersWithViews();
+            //}
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

@@ -63,7 +63,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,TournamentId,GameId,PredictedWinningTeamId,PredictedHomeGoals,PredictedAwayGoals,AccountBalance,BetAmount,BetPlacedDate")] UserBets userBets)
         {
             if (ModelState.IsValid)
@@ -110,7 +110,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserId,TournamentId,GameId,PredictedWinningTeamId,PredictedHomeGoals,PredictedAwayGoals,AccountBalance,BetAmount,BetPlacedDate")] UserBets userBets)
         {
             if (id != userBets.Id)
@@ -150,7 +150,7 @@ namespace KooliProjekt.Controllers
 
         // POST: UserBets/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _userBetsService.Delete(id);

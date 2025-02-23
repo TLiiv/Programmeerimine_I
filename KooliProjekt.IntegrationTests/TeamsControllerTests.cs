@@ -41,21 +41,10 @@ namespace KooliProjekt.IntegrationTests
         [InlineData("/Teams/Details/")]
         [InlineData("/Teams/Edit/")]
         [InlineData("/Teams/Delete/")]
-        public async Task Get_endpoints_should_return_not_found_when_bet_id_is_missing(string url)
-        {
-            //Arrange
-
-            //Act
-            var response = await _client.GetAsync(url);
-            //Assert
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Theory]
         [InlineData("/Teams/Details/1")]
         [InlineData("/Teams/Edit/1")]
         [InlineData("/Teams/Delete/1")]
-        public async Task Get_endpoints_should_return_not_found_when_bet_does_not_exist(string url)
+        public async Task Get_endpoints_should_return_not_found_when_teams_id_is_missing_or_not_found(string url)
         {
             //Arrange
 
@@ -64,6 +53,8 @@ namespace KooliProjekt.IntegrationTests
             //Assert
             Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
+
+       
         [Fact]
         public async Task Details_should_return_success_when_team_is_found()
         {

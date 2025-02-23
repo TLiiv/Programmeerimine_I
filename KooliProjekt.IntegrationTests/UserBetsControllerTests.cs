@@ -41,7 +41,10 @@ namespace KooliProjekt.IntegrationTests
         [InlineData("/UserBets/Details/")]
         [InlineData("/UserBets/Edit/")]
         [InlineData("/UserBets/Delete/")]
-        public async Task Get_endpoints_should_return_not_found_when_bet_id_is_missing(string url)
+        [InlineData("/UserBets/Details/1")]
+        [InlineData("/UserBets/Edit/1")]
+        [InlineData("/UserBets/Delete/1")]
+        public async Task Get_endpoints_should_return_not_found_when_bet_id_is_missing_or_not_found(string url)
         {
             //Arrange
             
@@ -51,19 +54,7 @@ namespace KooliProjekt.IntegrationTests
             Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory]
-        [InlineData("/UserBets/Details/1")]
-        [InlineData("/UserBets/Edit/1")]
-        [InlineData("/UserBets/Delete/1")]
-        public async Task Get_endpoints_should_return_not_found_when_bet_does_not_exist(string url)
-        {
-            //Arrange
-
-            //Act
-            var response = await _client.GetAsync(url);
-            //Assert
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
-        }
+       
 
         [Fact]
         public async Task Details_should_return_succsess_when_user_bet_is_found()

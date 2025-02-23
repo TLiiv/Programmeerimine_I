@@ -57,7 +57,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status,Format")] Tournament tournament)
         {
             if (ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("TournamentId,TournamentName,TournamentStartDate,TournamentEndtDate,Status,Format")] Tournament tournament)
         {
             if (id != tournament.TournamentId)
@@ -126,7 +126,7 @@ namespace KooliProjekt.Controllers
 
         // POST: Tournaments/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+       // [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             
