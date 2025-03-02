@@ -10,9 +10,10 @@ using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
+    [ApiController]
+    [Route("Users")]
     public class UsersController : Controller
-    {
-        
+    {   
         private readonly IUsersService _usersService;
 
         public UsersController(IUsersService usersService)
@@ -22,12 +23,17 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Users
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var data  = await _usersService.AllUsers();
             return View(data);
+            
         }
 
+       
+
+        [HttpGet("Details/{id}")]
         // GET: Users/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -45,7 +51,7 @@ namespace KooliProjekt.Controllers
 
             return View(user);
         }
-
+        [HttpGet("Details/Create")]
         // GET: Users/Create
         public IActionResult Create()
         {
@@ -55,7 +61,7 @@ namespace KooliProjekt.Controllers
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("Create")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,UserName,FirstName,LastName,Email,Password,PhoneNumber,IsAdmin")] User user)
         {
@@ -68,6 +74,9 @@ namespace KooliProjekt.Controllers
             return View(user);
         }
 
+
+
+        [HttpGet("Edit/{id}")]
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -83,11 +92,10 @@ namespace KooliProjekt.Controllers
             }
             return View(user);
         }
-
+        [HttpPost("Edit/{id}")]
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("UserId,UserName,FirstName,LastName,Email,Password,PhoneNumber,IsAdmin")] User user)
         {
@@ -102,7 +110,7 @@ namespace KooliProjekt.Controllers
             }
             return View(user);
         }
-
+        [HttpGet("Delete/{id}")]
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -122,12 +130,42 @@ namespace KooliProjekt.Controllers
         }
 
         // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Delete/{id}"), ActionName("Delete")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _usersService.Delete(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        //API ENDPOINTS
+
+        [HttpGet("api/allusers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var data = await _usersService.AllUsers();
+            return Ok(data);
+        }
+
+        [HttpPost("api/save")] 
+        public async Task<IActionResult> Save([FromBody] User user)
+        {
+            if (user == null)
+            {
+                return BadRequest("User cannot be null");
+            }
+
+            
+            await _usersService.Save(user);
+
+            return Ok(user);
+        }
+        [HttpDelete("api/delete/{id}")] 
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _usersService.Delete(id);
+           
+            return Ok(); 
         }
     }
 }
