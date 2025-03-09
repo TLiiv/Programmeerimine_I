@@ -147,7 +147,7 @@ namespace KooliProjekt.Controllers
             return Ok(data);
         }
 
-        [HttpPost("api/save")] 
+        [HttpPost("api/save")]
         public async Task<IActionResult> Save([FromBody] User user)
         {
             if (user == null)
@@ -155,11 +155,31 @@ namespace KooliProjekt.Controllers
                 return BadRequest("User cannot be null");
             }
 
-            
+
             await _usersService.Save(user);
 
             return Ok(user);
         }
+        [HttpPut("api/update/{userId}")]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] User user)
+        {
+            if (userId != user.UserId)
+            {
+                return BadRequest("User ID in URL does not match ID in body.");
+            }
+
+            //var existingUser = await _usersService.Get(userId);
+            //if (existingUser == null)
+            //{
+            //    return NotFound($"User with ID {userId} not found.");
+            //}
+
+            await _usersService.Save(user);
+            return NoContent(); // Return 204 for a successful update without content.
+        }
+
+       
+
         [HttpDelete("api/delete/{id}")] 
         public async Task<IActionResult> Delete(Guid id)
         {

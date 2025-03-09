@@ -16,7 +16,8 @@ namespace KooliProjekt.WpfApp.Api
         public async Task<List<User>> AllUsers() 
         {
             var result = await _httpClient.GetFromJsonAsync<List<User>>("Users/api/allusers");
-            return result ?? new List<User>();
+
+            return result;
         }
 
 
@@ -31,11 +32,13 @@ namespace KooliProjekt.WpfApp.Api
             else
             {
                 // Update existing user
-                await _httpClient.PutAsJsonAsync("Users/api/save", user); 
+                //await _httpClient.PutAsJsonAsync($"Users/api/update/{user.UserId}", user); 
+                await _httpClient.PostAsJsonAsync($"Users/api/save/{user.UserId}", user); 
+
             }
         }
 
-
+      
         public async Task Delete(Guid userId)
         {
           
@@ -44,3 +47,15 @@ namespace KooliProjekt.WpfApp.Api
         }
     }
 }
+
+//public async Task Save(User user)
+//{
+//    if (user.UserId == Guid.Empty)
+//    {
+//        await _httpClient.PostAsJsonAsync("Users/api/create", user);
+//    }
+//    else
+//    {
+//        await _httpClient.PutAsJsonAsync("TodoLists/" + list.Id, list);
+//    }
+//}

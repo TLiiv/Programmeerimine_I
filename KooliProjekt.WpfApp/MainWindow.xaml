@@ -25,12 +25,26 @@
         <StackPanel Margin="10" Grid.Column="1">
             <TextBlock>ID</TextBlock>
             <TextBlock Text="{Binding SelectedItem.UserId}"/>
-            <TextBlock>Title</TextBlock>
+            <TextBlock>UserName</TextBlock>
             <TextBox Text="{Binding SelectedItem.UserName}"/>
+            <TextBlock>FirstName</TextBlock>
+            <TextBox Text="{Binding SelectedItem.FirstName}"/> 
+            <TextBlock>LastName</TextBlock>
+            <TextBox Text="{Binding SelectedItem.LastName}"/>
+            <TextBlock>Email</TextBlock>
+            <TextBox Text="{Binding SelectedItem.Email}"/>
+            <TextBlock>Password</TextBlock>
+            <TextBox Text="{Binding SelectedItem.Password}"/> 
+            <TextBlock>PhoneNumber</TextBlock>
+            <TextBox Text="{Binding SelectedItem.PhoneNumber}"/> 
+            <TextBlock>IsAdmin</TextBlock>
+            <TextBox Text="{Binding SelectedItem.IsAdmin}"/>
 
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <Button Margin="5" Padding="5">New</Button>
                 <Button Command="{Binding SaveCommand}" Margin="5" Padding="5">Save</Button>
                 <Button Command="{Binding DeleteCommand}" Margin="5" Padding="5">Delete</Button>
+                
             </StackPanel>
         </StackPanel>
     </Grid>

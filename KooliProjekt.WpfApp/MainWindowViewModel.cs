@@ -29,18 +29,38 @@ namespace KooliProjekt.WpfApp
 
             Lists = new ObservableCollection<User>();
 
+           
+
+            //SaveCommand = new RelayCommand<User>(
+            //async user =>
+            //{
+            //   if (SelectedItem == null)
+            //       return;
+       
+            //   if (SelectedItem.UserId == Guid.Empty)  
+            //   {
+            //        await _apiClient.Save(SelectedItem);
+            //    }
+            //   else  
+            //   {
+            //       await _apiClient.Save(SelectedItem);
+            //    }
+            //    },
+            //    user => SelectedItem != null && !string.IsNullOrWhiteSpace(SelectedItem.UserName)
+            //   );
+
             SaveCommand = new RelayCommand<User>(
-                // Execute
-                async list =>
-                {
-                    await _apiClient.Save(SelectedItem);
-                },
-                // CanExecute
-                list =>
-                {
-                    return SelectedItem != null;
-                }
-            );
+             // Execute
+             async user =>
+             {
+                 await _apiClient.Save(SelectedItem);
+             },
+             // CanExecute
+             user =>
+             {
+                 return SelectedItem != null;
+             }
+         );
 
             DeleteCommand = new RelayCommand<User>(
                 // Execute
