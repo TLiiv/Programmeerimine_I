@@ -28,7 +28,7 @@
             <TextBlock>UserName</TextBlock>
             <TextBox Text="{Binding SelectedItem.UserName}"/>
             <TextBlock>FirstName</TextBlock>
-            <TextBox Text="{Binding SelectedItem.FirstName}"/> 
+            <TextBox Text="{Binding SelectedItem.FirstName}"/>
             <TextBlock>LastName</TextBlock>
             <TextBox Text="{Binding SelectedItem.LastName}"/>
             <TextBlock>Email</TextBlock>
@@ -39,6 +39,16 @@
             <TextBox Text="{Binding SelectedItem.PhoneNumber}"/> 
             <TextBlock>IsAdmin</TextBlock>
             <TextBox Text="{Binding SelectedItem.IsAdmin}"/>
+            <ListBox ItemsSource="{Binding SelectedItem.UserBets}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding BetAmount}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+           
 
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
                 <Button Margin="5" Padding="5">New</Button>

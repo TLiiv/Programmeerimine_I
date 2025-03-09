@@ -35,6 +35,7 @@ namespace KooliProjekt.Data
         public string Password { get; set; }
         public string? PhoneNumber { get; set; }
         public IList<UserBets> UserBets { get; set; } = new List<UserBets>();
+
         public bool IsAdmin { get; set; }
     }
 }

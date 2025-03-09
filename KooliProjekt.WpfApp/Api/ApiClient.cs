@@ -32,8 +32,8 @@ namespace KooliProjekt.WpfApp.Api
             else
             {
                 // Update existing user
-                //await _httpClient.PutAsJsonAsync($"Users/api/update/{user.UserId}", user); 
-                await _httpClient.PostAsJsonAsync($"Users/api/save/{user.UserId}", user); 
+                await _httpClient.PutAsJsonAsync($"Users/api/update/{user.UserId}", user); 
+                //await _httpClient.PostAsJsonAsync($"Users/api/save/{user.UserId}", user); 
 
             }
         }
