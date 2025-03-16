@@ -13,19 +13,24 @@ namespace KooliProjekt.WpfApp
     {
 
         public ObservableCollection<User> Lists { get; private set; }
+        public ICommand NewCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
-        public Predicate<User> ConfirmDelete { get; set; }
+        //public Predicate<User> ConfirmDelete { get; set; }
+        //public Action <string> OnError { get; set; }
+
 
         private readonly IApiClient _apiClient;
+        private readonly IDialogProvider _dialogProvider;
 
-        public MainWindowViewModel() : this(new ApiClient())
+        public MainWindowViewModel() : this(new ApiClient(), new DialogProvider() )
         {
         }
 
-        public MainWindowViewModel(IApiClient apiClient)
+        public MainWindowViewModel(IApiClient apiClient, IDialogProvider dialogProvider)
         {
             _apiClient = apiClient;
+            _dialogProvider = dialogProvider;
 
             Lists = new ObservableCollection<User>();
 
@@ -66,14 +71,17 @@ namespace KooliProjekt.WpfApp
                 // Execute
                 async list =>
                 {
-                    if (ConfirmDelete != null)
-                    {
-                        var result = ConfirmDelete(SelectedItem);
+                    
+                        var result = _dialogProvider.Confirm
+                            (
+                                "Are you sure you want to delete selected user?",
+                                "Delete User?"
+                            );
                         if (!result)
                         {
                             return;
                         }
-                    }
+                    
 
                     await _apiClient.Delete(SelectedItem.UserId);
                     Lists.Remove(SelectedItem);
@@ -91,8 +99,13 @@ namespace KooliProjekt.WpfApp
         {
             Lists.Clear();
 
-            var users = await _apiClient.AllUsers();
-            foreach (var user in users)
+            var result = await _apiClient.AllUsers();
+            if (result.HasError)
+            {
+                _dialogProvider.Error(result.Error, "Error");
+                return;
+            }
+            foreach (var user in result.Value)
             {
                 Lists.Add(user);
             }

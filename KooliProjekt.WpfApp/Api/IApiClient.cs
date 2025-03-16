@@ -2,7 +2,7 @@
 {
     public interface IApiClient
     {
-        Task<List<User>> AllUsers();
+        Task<Result<List<User>>> AllUsers();
         Task Save(User user);
         Task Delete(Guid id);
     }
